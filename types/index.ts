@@ -3,19 +3,26 @@
 export type TimerMode = "pomodoro" | "shortBreak" | "longBreak";
 
 export interface TimerConfig {
-  pomodoro: number; // minutes
-  shortBreak: number; // minutes
-  longBreak: number; // minutes
+  pomodoro: number;
+  shortBreak: number;
+  longBreak: number;
+}
+
+export interface TimerSession {
+  startTime: number;
+  date: string;
+  duration: number;
+  mode: TimerMode;
 }
 
 export interface Task {
   id: string;
   name: string;
-  timerDuration: number; // minutes
   completed: boolean;
   createdAt: Date;
   pomodorosCompleted: number;
   updatedAt?: Date;
+  timerDuration: number;
 }
 
 export interface AlarmSettings {
@@ -80,6 +87,32 @@ export const DEFAULT_ALARM_SETTINGS: AlarmSettings = {
   enabled: true,
   sound: "default",
   vibration: true,
+};
+
+//Timer Spent in a Day.
+export const getTodayTimeSpent = (
+  sessions: TimerSession[],
+): { hours: number; minutes: number } => {
+  const today = new Date().toISOString().split("T")[0];
+
+  const totalSeconds = sessions
+    .filter((session) => session.date === today)
+    .reduce((total, session) => total + session.duration, 0);
+
+  return {
+    hours: Math.floor(totalSeconds / 3600),
+    minutes: Math.floor((totalSeconds % 3600) / 60),
+  };
+};
+
+export const formatTimeSpent = (hours: number, minutes: number): string => {
+  if (hours === 0 && minutes === 0) return "0m";
+
+  const parts = [];
+  if (hours > 0) parts.push(`${hours}h`);
+  if (minutes > 0) parts.push(`${minutes}m`);
+
+  return parts.join(" ");
 };
 
 // Helper functions

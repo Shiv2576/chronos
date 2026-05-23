@@ -1,76 +1,83 @@
 // app/(tabs)/_layout.tsx
 
 import { Tabs } from "expo-router";
-import { StyleSheet, Platform, View, Text } from "react-native";
+import { StyleSheet, Platform, View } from "react-native";
 import { Timer, BarChart3, CheckSquare, Settings } from "lucide-react-native";
 import { ThemedText } from "@/components/themed-text";
+import { TimerProvider } from "@/components/context/timerContext";
 
 export default function TabsLayout() {
   return (
-    <Tabs
-      screenOptions={{
-        headerShown: true,
-        header: () => <ChronosHeader />,
-        tabBarStyle: styles.tabBar,
-        tabBarActiveTintColor: "#9A433B",
-        tabBarInactiveTintColor: "#999",
-        tabBarLabelStyle: styles.tabBarLabel,
-        tabBarShowLabel: true,
-        tabBarHideOnKeyboard: true,
-      }}
-    >
-      <Tabs.Screen
-        name="timer"
-        options={{
-          title: "Timer",
-          tabBarIcon: ({ focused, color, size }) => (
-            <Timer size={size} color={color} strokeWidth={focused ? 2.5 : 2} />
-          ),
+    <TimerProvider>
+      <Tabs
+        screenOptions={{
+          headerShown: true,
+          header: () => <ChronosHeader />,
+          tabBarStyle: styles.tabBar,
+          tabBarActiveTintColor: "#9A433B",
+          tabBarInactiveTintColor: "#999",
+          tabBarLabelStyle: styles.tabBarLabel,
+          tabBarShowLabel: true,
+          tabBarHideOnKeyboard: true,
         }}
-      />
+      >
+        <Tabs.Screen
+          name="timer"
+          options={{
+            title: "Timer",
+            tabBarIcon: ({ focused, color, size }) => (
+              <Timer
+                size={size}
+                color={color}
+                strokeWidth={focused ? 2.5 : 2}
+              />
+            ),
+          }}
+        />
 
-      <Tabs.Screen
-        name="stats"
-        options={{
-          title: "Stats",
-          tabBarIcon: ({ focused, color, size }) => (
-            <BarChart3
-              size={size}
-              color={color}
-              strokeWidth={focused ? 2.5 : 2}
-            />
-          ),
-        }}
-      />
+        <Tabs.Screen
+          name="task"
+          options={{
+            title: "Tasks",
+            tabBarIcon: ({ focused, color, size }) => (
+              <CheckSquare
+                size={size}
+                color={color}
+                strokeWidth={focused ? 2.5 : 2}
+              />
+            ),
+          }}
+        />
 
-      <Tabs.Screen
-        name="task"
-        options={{
-          title: "Tasks",
-          tabBarIcon: ({ focused, color, size }) => (
-            <CheckSquare
-              size={size}
-              color={color}
-              strokeWidth={focused ? 2.5 : 2}
-            />
-          ),
-        }}
-      />
+        <Tabs.Screen
+          name="stats"
+          options={{
+            title: "Stats",
+            tabBarIcon: ({ focused, color, size }) => (
+              <BarChart3
+                size={size}
+                color={color}
+                strokeWidth={focused ? 2.5 : 2}
+              />
+            ),
+          }}
+        />
 
-      <Tabs.Screen
-        name="settings"
-        options={{
-          title: "Settings",
-          tabBarIcon: ({ focused, color, size }) => (
-            <Settings
-              size={size}
-              color={color}
-              strokeWidth={focused ? 2.5 : 2}
-            />
-          ),
-        }}
-      />
-    </Tabs>
+        <Tabs.Screen
+          name="settings"
+          options={{
+            title: "Settings",
+            tabBarIcon: ({ focused, color, size }) => (
+              <Settings
+                size={size}
+                color={color}
+                strokeWidth={focused ? 2.5 : 2}
+              />
+            ),
+          }}
+        />
+      </Tabs>
+    </TimerProvider>
   );
 }
 
