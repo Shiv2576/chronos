@@ -339,13 +339,18 @@ function TimerScreen() {
   };
 
   const handleReset = () => {
+    if (isRunning) {
+      endSession();
+    }
     setIsRunning(false);
     setTimeLeft(getTimeForMode(mode, DEFAULT_TIMER_CONFIG));
   };
 
   const handleNext = () => {
+    if (isRunning) {
+      endSession();
+    }
     setIsRunning(false);
-    // Cycle through modes: pomodoro -> shortBreak -> longBreak -> pomodoro
     switch (mode) {
       case "pomodoro":
         setMode("shortBreak");
@@ -361,7 +366,7 @@ function TimerScreen() {
 
   const handleModeChange = (newMode: TimerMode) => {
     if (isRunning) {
-      endSession(); // End current session before changing mode
+      endSession();
       setIsRunning(false);
     }
     setMode(newMode);
@@ -501,7 +506,7 @@ const styles = StyleSheet.create({
   },
   timerText: {
     fontSize: 130,
-    fontWeight: "500",
+    fontWeight: "900",
     fontFamily: Platform.select({
       ios: "SF Pro Display",
       android: "Roboto",
@@ -529,7 +534,7 @@ const styles = StyleSheet.create({
   },
   centerButton: {
     backgroundColor: "#9A433B",
-    width: 80,
+    width: 150,
     height: 80,
     borderRadius: 20,
     alignItems: "center",

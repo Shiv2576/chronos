@@ -1256,7 +1256,7 @@ export default function TaskScreen() {
             <ThemedText style={styles.dateText}>{currentDate}</ThemedText>
           </View>
 
-          <View style={styles.focusCard}>
+          <View>
             <ThemedText style={styles.focusLabel}>Today's Focus</ThemedText>
             <ThemedText style={styles.focusTime}>
               {todayTime.hours > 0 || todayTime.minutes > 0
@@ -1458,18 +1458,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#666",
   },
-  focusCard: {
-    backgroundColor: "#fff",
-    borderRadius: 16,
-    padding: 20,
-    marginBottom: 24,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
-  },
   focusLabel: {
     fontSize: 14,
     color: "#666",
@@ -1477,8 +1465,8 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   focusTime: {
-    fontSize: 36,
-    fontWeight: "700",
+    fontSize: 20,
+    fontWeight: "500",
     color: "#9A433B",
   },
   taskSection: {

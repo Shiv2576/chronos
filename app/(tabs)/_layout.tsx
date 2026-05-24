@@ -5,10 +5,15 @@ import { StyleSheet, Platform, View } from "react-native";
 import { Timer, BarChart3, CheckSquare, Settings } from "lucide-react-native";
 import { ThemedText } from "@/components/themed-text";
 import { TimerProvider } from "@/components/context/timerContext";
+import { StatusBar } from "expo-status-bar";
 
 export default function TabsLayout() {
   return (
     <TimerProvider>
+      <View style={styles.statusBarStrip} />
+
+      <StatusBar style="light" backgroundColor="#9A433B" />
+
       <Tabs
         screenOptions={{
           headerShown: true,
@@ -92,9 +97,18 @@ function ChronosHeader() {
 }
 
 const styles = StyleSheet.create({
+  statusBarStrip: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: Platform.OS === "ios" ? 50 : 40,
+    backgroundColor: "#D97469",
+    zIndex: 100,
+  },
   headerContainer: {
     backgroundColor: "#F5F5F3",
-    paddingTop: Platform.OS === "ios" ? 60 : 40,
+    paddingTop: Platform.OS === "ios" ? 40 : 35,
     paddingBottom: 20,
     paddingHorizontal: 24,
     borderBottomWidth: 0,
@@ -103,7 +117,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   chronosTitle: {
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: "700",
     fontFamily: Platform.select({
       ios: "SF Pro Text",
@@ -111,17 +125,16 @@ const styles = StyleSheet.create({
     }),
     color: "#9A433B",
     letterSpacing: 3,
-    marginTop: 20,
+    marginTop: 40,
   },
   tabBar: {
     position: "absolute",
-    bottom: 20,
+    bottom: 0,
     left: 20,
     right: 20,
     backgroundColor: "#FFFFFF",
-    borderRadius: 28,
-    height: 65,
-    paddingBottom: Platform.OS === "ios" ? 20 : 12,
+    height: 110,
+    paddingBottom: Platform.OS === "ios" ? 20 : 30,
     paddingTop: 8,
     shadowColor: "#000",
     shadowOffset: {

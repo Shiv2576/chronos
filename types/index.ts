@@ -22,13 +22,26 @@ export interface Task {
   createdAt: Date;
   pomodorosCompleted: number;
   updatedAt?: Date;
-  timerDuration: number;
+  timerDuration?: number;
 }
 
 export interface AlarmSettings {
   enabled: boolean;
   sound: string;
   vibration: boolean;
+}
+
+export interface DailyStats {
+  date: string;
+  totalSeconds: number;
+  completedPomodoros: number;
+  sessions: number;
+}
+
+export interface WeeklyStats {
+  days: DailyStats[];
+  currentStreak: number;
+  longestStreak: number;
 }
 
 export type TaskAction =
