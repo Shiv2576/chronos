@@ -1,10 +1,11 @@
+// app/_layout.tsx
+
 import { ClerkLoaded, ClerkLoading, ClerkProvider, useUser } from "@clerk/expo";
-
 import { tokenCache } from "@clerk/expo/token-cache";
-
 import { Redirect, Slot, useSegments } from "expo-router";
-
 import { ActivityIndicator, View } from "react-native";
+import { SettingsProvider } from "@/components/context/timer-settings";
+import { TimerProvider } from "@/components/context/timerContext";
 
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
 
@@ -28,7 +29,11 @@ export default function RootLayout() {
       </ClerkLoading>
 
       <ClerkLoaded>
-        <AppNavigator />
+        <SettingsProvider>
+          <TimerProvider>
+            <AppNavigator />
+          </TimerProvider>
+        </SettingsProvider>
       </ClerkLoaded>
     </ClerkProvider>
   );
@@ -36,20 +41,16 @@ export default function RootLayout() {
 
 function AppNavigator() {
   const { isSignedIn, user } = useUser();
-
   const segments = useSegments();
 
   const inAuthScreen = segments[0] === "(auth)";
-
   const inOnboarding = segments[0] === "onboarding";
-
   const hasOnboarded = user?.unsafeMetadata?.hasOnboarded;
 
   if (!isSignedIn) {
     if (inAuthScreen) {
       return <Slot />;
     }
-
     return <Redirect href="/(auth)/sign-in" />;
   }
 
@@ -57,7 +58,6 @@ function AppNavigator() {
     if (inOnboarding) {
       return <Slot />;
     }
-
     return <Redirect href="/onboarding" />;
   }
 

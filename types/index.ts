@@ -21,8 +21,8 @@ export interface Task {
   completed: boolean;
   createdAt: Date;
   pomodorosCompleted: number;
-  updatedAt?: Date;
-  timerDuration?: number;
+  updatedAt: Date;
+  timerDuration: number;
 }
 
 export interface AlarmSettings {
@@ -75,7 +75,7 @@ export type TaskScreenProps = {
 
 export type StatsScreenProps = {
   tasks: Task[];
-  totalFocusTime: number; // in minutes
+  totalFocusTime: number;
   completedPomodoros: number;
   currentStreak: number;
   longestStreak: number;
@@ -89,7 +89,6 @@ export type SettingsScreenProps = {
   onSignOut: () => void;
 };
 
-// Default values
 export const DEFAULT_TIMER_CONFIG: TimerConfig = {
   pomodoro: 25,
   shortBreak: 5,
@@ -157,11 +156,11 @@ export const getCompletedTasks = (tasks: Task[]): Task[] => {
   return tasks.filter((task) => task.completed);
 };
 
-// Utility functions for task management
 export const createNewTask = (name: string, timerDuration: number): Task => {
   return {
     id: Date.now().toString(),
     name,
+    updatedAt: new Date(),
     timerDuration,
     completed: false,
     createdAt: new Date(),

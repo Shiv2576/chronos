@@ -1,58 +1,44 @@
 // app/(tabs)/stats.tsx
 
-import { View, StyleSheet, Platform } from "react-native";
-import { ThemedText } from "@/components/themed-text";
+import { StyleSheet, ScrollView, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { CurrentSessionCard } from "@/components/current-session-card";
+import { WeeklyStatsChart } from "@/components/weekly-session-graph";
+import { useTimer } from "@/components/context/timerContext";
 
 export default function StatsScreen() {
+  const { sessions } = useTimer();
+  const insets = useSafeAreaInsets();
+  const tabBarHeight = useBottomTabBarHeight();
+
   return (
-    <View style={styles.container}>
-      <ThemedText style={styles.title}>Statistics</ThemedText>
-
-      <View style={styles.statsCard}>
-        <ThemedText style={styles.statValue}>24</ThemedText>
-        <ThemedText style={styles.statLabel}>Total Sessions</ThemedText>
-      </View>
-
-      <View style={styles.statsCard}>
-        <ThemedText style={styles.statValue}>12h 30m</ThemedText>
-        <ThemedText style={styles.statLabel}>Total Focus Time</ThemedText>
-      </View>
-    </View>
+    <ScrollView
+      style={styles.scrollView}
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={[
+        styles.contentContainer,
+        {
+          paddingBottom: tabBarHeight + insets.bottom + 20,
+        },
+      ]}
+    >
+      <CurrentSessionCard />
+      <WeeklyStatsChart sessions={sessions} />
+      <View style={styles.bottomSpacer} />
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  scrollView: {
     flex: 1,
     backgroundColor: "#F5F5F3",
-    padding: 24,
   },
-  title: {
-    fontSize: 32,
-    fontWeight: "300",
-    fontFamily: Platform.select({
-      ios: "SF Pro Display",
-      android: "Roboto",
-    }),
-    color: "#000",
-    marginBottom: 24,
-    textAlign: "center",
+  contentContainer: {
+    paddingHorizontal: 0,
   },
-  statsCard: {
-    backgroundColor: "#fff",
-    padding: 24,
-    borderRadius: 16,
-    alignItems: "center",
-    marginBottom: 16,
-  },
-  statValue: {
-    fontSize: 48,
-    fontWeight: "700",
-    color: "#9A433B",
-    marginBottom: 8,
-  },
-  statLabel: {
-    fontSize: 16,
-    color: "#666",
+  bottomSpacer: {
+    height: 20,
   },
 });

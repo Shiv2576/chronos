@@ -1,315 +1,40 @@
 // app/(tabs)/timer.tsx
 
-// import {
-//   TimerMode,
-//   DEFAULT_TIMER_CONFIG,
-//   formatTime,
-//   getTimeForMode,
-//   TimerSession,
-// } from "@/types";
-// import { useState, useEffect, useRef } from "react";
-// import { View, Pressable, StyleSheet, Platform } from "react-native";
-// import { ThemedText } from "@/components/themed-text";
-// import {
-//   Play,
-//   Pause,
-//   RotateCcw,
-//   SkipForward,
-//   Timer,
-// } from "lucide-react-native";
-
-// function TimerScreen() {
-//   const [mode, setMode] = useState<TimerMode>("pomodoro");
-//   const [timeLeft, setTimeLeft] = useState<number>(
-//     getTimeForMode("pomodoro", DEFAULT_TIMER_CONFIG),
-//   );
-//   const [isRunning, setIsRunning] = useState<boolean>(false);
-//   const intervalRef = useRef<NodeJS.Timeout | number>(null);
-
-//   const [sessions, setSessions] = useState<TimerSession[]>([]);
-//   const sessionStartRef = useRef<number>(0);
-
-//   useEffect(() => {
-//     setTimeLeft(getTimeForMode(mode, DEFAULT_TIMER_CONFIG));
-//     setIsRunning(false);
-//   }, [mode]);
-
-//   // Timer logic
-//   useEffect(() => {
-//     if (isRunning && timeLeft > 0) {
-//       intervalRef.current = setInterval(() => {
-//         setTimeLeft((prev) => prev - 1);
-//       }, 1000);
-//     } else if (timeLeft === 0 && isRunning) {
-//       setIsRunning(false);
-//       // Timer complete - will add sound/notification later
-//     }
-
-//     return () => {
-//       if (intervalRef.current) {
-//         clearInterval(intervalRef.current);
-//       }
-//     };
-//   }, [isRunning, timeLeft]);
-
-//   const handleStart = () => {
-//     sessionStartRef.current = Date.now();
-//     setIsRunning(true);
-//   };
-
-//   const handlePause = () => {
-//     if (sessionStartRef.current > 0) {
-//       const duration = Math.floor(
-//         (Date.now() - sessionStartRef.current) / 1000,
-//       );
-
-//       if (duration > 0) {
-//         const session: TimerSession = {
-//           startTime: Date.now(),
-//           date: new Date().toISOString().split("T")[0],
-//           duration,
-//           mode: mode,
-//         };
-
-//         setSessions((prev) => [...prev, session]);
-//       }
-
-//       sessionStartRef.current = 0;
-//     }
-//     setIsRunning(false);
-//   };
-
-//   const handleReset = () => {
-//     setIsRunning(false);
-//     setTimeLeft(getTimeForMode(mode, DEFAULT_TIMER_CONFIG));
-//   };
-
-//   const handleNext = () => {
-//     setIsRunning(false);
-//     // Cycle through modes: pomodoro -> shortBreak -> longBreak -> pomodoro
-//     switch (mode) {
-//       case "pomodoro":
-//         setMode("shortBreak");
-//         break;
-//       case "shortBreak":
-//         setMode("longBreak");
-//         break;
-//       case "longBreak":
-//         setMode("pomodoro");
-//         break;
-//     }
-//   };
-
-//   const handleModeChange = (newMode: TimerMode) => {
-//     setMode(newMode);
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       {/* Mode Selector */}
-//       <View style={styles.modeSelector}>
-//         <Pressable
-//           style={[
-//             styles.modeButton,
-//             mode === "pomodoro" && styles.modeButtonActive,
-//           ]}
-//           onPress={() => handleModeChange("pomodoro")}
-//         >
-//           <ThemedText
-//             style={[
-//               styles.modeText,
-//               mode === "pomodoro" && styles.modeTextActive,
-//             ]}
-//           >
-//             Pomodoro
-//           </ThemedText>
-//         </Pressable>
-
-//         <Pressable
-//           style={[
-//             styles.modeButton,
-//             mode === "shortBreak" && styles.modeButtonActive,
-//           ]}
-//           onPress={() => handleModeChange("shortBreak")}
-//         >
-//           <ThemedText
-//             style={[
-//               styles.modeText,
-//               mode === "shortBreak" && styles.modeTextActive,
-//             ]}
-//           >
-//             Short Break
-//           </ThemedText>
-//         </Pressable>
-
-//         <Pressable
-//           style={[
-//             styles.modeButton,
-//             mode === "longBreak" && styles.modeButtonActive,
-//           ]}
-//           onPress={() => handleModeChange("longBreak")}
-//         >
-//           <ThemedText
-//             style={[
-//               styles.modeText,
-//               mode === "longBreak" && styles.modeTextActive,
-//             ]}
-//           >
-//             Long Break
-//           </ThemedText>
-//         </Pressable>
-//       </View>
-
-//       {/* Timer Display */}
-//       <View style={styles.timerContainer}>
-//         <ThemedText style={styles.timerText}>{formatTime(timeLeft)}</ThemedText>
-//       </View>
-
-//       {/* Timer Controls */}
-//       <View style={styles.controls}>
-//         <Pressable
-//           style={[styles.controlButton, styles.sideButton]}
-//           onPress={handleReset}
-//         >
-//           <RotateCcw size={28} color="#fff" />
-//         </Pressable>
-
-//         {!isRunning ? (
-//           <Pressable
-//             style={[styles.controlButton, styles.centerButton]}
-//             onPress={handleStart}
-//           >
-//             <Play size={36} color="#fff" />
-//           </Pressable>
-//         ) : (
-//           <Pressable
-//             style={[styles.controlButton, styles.centerButton]}
-//             onPress={handlePause}
-//           >
-//             <Pause size={36} color="#fff" />
-//           </Pressable>
-//         )}
-
-//         <Pressable
-//           style={[styles.controlButton, styles.sideButton]}
-//           onPress={handleNext}
-//         >
-//           <SkipForward size={28} color="#fff" />
-//         </Pressable>
-//       </View>
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#F5F5F3",
-//     padding: 24,
-//     // Remove flex: 1 to allow content to stack from top
-//   },
-//   modeSelector: {
-//     flexDirection: "row",
-//     backgroundColor: "#fff",
-//     borderRadius: 16,
-//     padding: 4,
-//     marginBottom: 48,
-//     gap: 4,
-//   },
-//   modeButton: {
-//     flex: 1,
-//     paddingVertical: 12,
-//     borderRadius: 12,
-//     alignItems: "center",
-//   },
-//   modeButtonActive: {
-//     backgroundColor: "#9A433B",
-//   },
-//   modeText: {
-//     fontSize: 14,
-//     fontWeight: "500",
-//     color: "#666",
-//   },
-//   modeTextActive: {
-//     color: "#fff",
-//   },
-//   timerContainer: {
-//     alignItems: "center",
-//     marginBottom: 48,
-//   },
-//   timerText: {
-//     fontSize: 130,
-//     fontWeight: "500",
-//     fontFamily: Platform.select({
-//       ios: "SF Pro Display",
-//       android: "Roboto",
-//     }),
-//     color: "#9A433B",
-//     lineHeight: 110,
-//   },
-//   controls: {
-//     flexDirection: "row",
-//     gap: 20,
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-//   controlButton: {
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-//   sideButton: {
-//     backgroundColor: "#767776",
-//     width: 64,
-//     height: 64,
-//     borderRadius: 16,
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-//   centerButton: {
-//     backgroundColor: "#9A433B",
-//     width: 80,
-//     height: 80,
-//     borderRadius: 20,
-//     alignItems: "center",
-//     justifyContent: "center",
-//     shadowColor: "#9A433B",
-//     shadowOffset: { width: 0, height: 4 },
-//     shadowOpacity: 5.3,
-//     shadowRadius: 10,
-//     elevation: 5,
-//   },
-// });
-
-// export default TimerScreen;
-
-import {
-  TimerMode,
-  DEFAULT_TIMER_CONFIG,
-  formatTime,
-  getTimeForMode,
-} from "@/types";
+import { TimerMode, formatTime, getTimeForMode } from "@/types";
 import { useState, useEffect, useRef } from "react";
-import { View, Pressable, StyleSheet, Platform } from "react-native";
+import {
+  View,
+  Pressable,
+  StyleSheet,
+  Platform,
+  ScrollView,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { ThemedText } from "@/components/themed-text";
 import { Play, Pause, RotateCcw, SkipForward } from "lucide-react-native";
 import { useTimer } from "@/components/context/timerContext";
+import { useSettings } from "@/components/context/timer-settings";
+import { StreakCard } from "@/components/streaks_card";
+import { useStreak } from "@/hooks/use_streaks";
 
 function TimerScreen() {
   const [mode, setMode] = useState<TimerMode>("pomodoro");
-  const [timeLeft, setTimeLeft] = useState<number>(
-    getTimeForMode("pomodoro", DEFAULT_TIMER_CONFIG),
-  );
+  const [timeLeft, setTimeLeft] = useState<number>(0);
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const intervalRef = useRef<NodeJS.Timeout | number>(null);
 
   const { startSession, endSession } = useTimer();
+  const { timerConfig } = useSettings();
+  const { streakData, loading } = useStreak();
+  const insets = useSafeAreaInsets();
+  const tabBarHeight = useBottomTabBarHeight();
 
   useEffect(() => {
-    setTimeLeft(getTimeForMode(mode, DEFAULT_TIMER_CONFIG));
+    setTimeLeft(getTimeForMode(mode, timerConfig));
     setIsRunning(false);
-  }, [mode]);
+  }, [mode, timerConfig]);
 
-  // Timer logic
   useEffect(() => {
     if (isRunning && timeLeft > 0) {
       intervalRef.current = setInterval(() => {
@@ -317,8 +42,7 @@ function TimerScreen() {
       }, 1000);
     } else if (timeLeft === 0 && isRunning) {
       setIsRunning(false);
-      endSession(); // End session when timer completes
-      // Timer complete - will add sound/notification later
+      endSession();
     }
 
     return () => {
@@ -326,7 +50,7 @@ function TimerScreen() {
         clearInterval(intervalRef.current);
       }
     };
-  }, [isRunning, timeLeft]);
+  }, [isRunning, timeLeft, endSession]);
 
   const handleStart = () => {
     startSession(mode);
@@ -343,7 +67,7 @@ function TimerScreen() {
       endSession();
     }
     setIsRunning(false);
-    setTimeLeft(getTimeForMode(mode, DEFAULT_TIMER_CONFIG));
+    setTimeLeft(getTimeForMode(mode, timerConfig));
   };
 
   const handleNext = () => {
@@ -372,9 +96,25 @@ function TimerScreen() {
     setMode(newMode);
   };
 
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ThemedText>Loading...</ThemedText>
+      </View>
+    );
+  }
+
   return (
-    <View style={styles.container}>
-      {/* Mode Selector */}
+    <ScrollView
+      style={styles.scrollView}
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={[
+        styles.contentContainer,
+        {
+          paddingBottom: tabBarHeight + insets.bottom + 20,
+        },
+      ]}
+    >
       <View style={styles.modeSelector}>
         <Pressable
           style={[
@@ -465,15 +205,34 @@ function TimerScreen() {
           <SkipForward size={28} color="#fff" />
         </Pressable>
       </View>
-    </View>
+
+      <StreakCard
+        currentWeekStreak={streakData.currentWeekStreak}
+        weekStartDate={streakData.weekStartDate}
+        weekEndDate={streakData.weekEndDate}
+        daysActiveThisWeek={streakData.daysActiveThisWeek}
+      />
+
+      <View style={styles.bottomSpacer} />
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  scrollView: {
+    flex: 1,
+    backgroundColor: "#F5F5F3",
+  },
+  contentContainer: {
+    paddingHorizontal: 24,
+    paddingTop: 24,
+  },
   container: {
     flex: 1,
     backgroundColor: "#F5F5F3",
     padding: 24,
+    justifyContent: "center",
+    alignItems: "center",
   },
   modeSelector: {
     flexDirection: "row",
@@ -519,6 +278,7 @@ const styles = StyleSheet.create({
     gap: 20,
     alignItems: "center",
     justifyContent: "center",
+    marginBottom: 24,
   },
   controlButton: {
     alignItems: "center",
@@ -544,6 +304,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 5.3,
     shadowRadius: 10,
     elevation: 5,
+  },
+  bottomSpacer: {
+    height: 20,
   },
 });
 

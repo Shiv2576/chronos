@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
       android: "Roboto",
     }),
     color: "#9A433B",
-    letterSpacing: 3,
+    letterSpacing: 2,
     marginTop: 40,
   },
   tabBar: {
